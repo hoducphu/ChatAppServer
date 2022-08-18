@@ -33,8 +33,8 @@ app.use((req, res, next) => {
 
 app.use("/api/user", userRoute);
 app.use("/api/room", roomRoute);
-
 app.use("/api/chat", chatRouter);
+
 io.on("connection", (socket) => {
   socket.on("Join Room", (room) => {
     socket.join(room);
