@@ -31,10 +31,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/", res, (req) => {
-  res.send("API is running");
-});
-
 app.use("/api/user", userRoute);
 app.use("/api/room", roomRoute);
 app.use("/api/chat", chatRouter);
