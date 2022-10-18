@@ -6,30 +6,26 @@ const server = http.createServer(app);
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "https://loaphuongweb.herokuapp.com/",
+    origin: "http://localhost:3000",
     // credentials: true,
   },
 });
-
 const cors = require("cors");
 const BodyParser = require("body-parser");
+const helmet = require("helmet");
+const compression = require("compression");
 const userRoute = require("./routes/user.route");
 const roomRoute = require("./routes/room.route");
 const chatRouter = require("./routes/chat.route");
 const connectDB = require("./config/db.config");
 
-// global variable
-global._dirname = __dirname;
 app.use(cors());
+app.use(helmet());
+app.use(compression());
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: "true" }));
 
 const port = process.env.PORT || 5000;
-
-app.use((req, res, next) => {
-  res.io = io;
-  next();
-});
 
 app.use("/api/user", userRoute);
 app.use("/api/room", roomRoute);
@@ -52,4 +48,4 @@ io.on("connection", (socket) => {
 app.use("/uploads", express.static("uploads"));
 
 connectDB.ConnectToMongoDB();
-server.listen(port, console.log(`port: ${port}`));
+module.exports = server.listen(port, console.log(`port: ${port}`));

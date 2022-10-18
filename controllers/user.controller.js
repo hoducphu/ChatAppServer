@@ -6,10 +6,12 @@ const bcrypt = require("bcrypt");
 
 const Register = asyncHandler(async (req, res) => {
   const { email, password, fullname, phonenumber, image } = req.body;
+  let err = [];
 
   // Check fields
   if (!email || !password || !fullname || !phonenumber) {
-    res.status(400).send({ message: "Please enter all the fields!" });
+    err.push("Please enter all the fields!");
+    res.status(400).send({ err });
     throw new Error("Please enter all the fields!");
   }
 
@@ -17,31 +19,49 @@ const Register = asyncHandler(async (req, res) => {
   const userExist = await User.findOne({ email });
 
   if (userExist) {
-    res.status(400).send({ message: "Email has been used!" });
+    err.push("Email has been used!");
+    res.status(400).send({ err });
     throw new Error("Email has been used!");
   }
 
   // Create new user
-  let newUser = await User.create({
-    email,
-    password,
-    fullname,
-    phonenumber,
-    image,
-  });
-
-  if (newUser) {
-    res.status(201).json({
-      _id: newUser._id,
-      email: newUser.email,
-      fullname: newUser.fullname,
-      phonenumber: newUser.phonenumber,
-      image: newUser.image,
-      token: generateToken(newUser._id),
+  try {
+    let newUser = await User.create({
+      email,
+      password,
+      fullname,
+      phonenumber,
+      image,
     });
-  } else {
-    res.status(400);
-    throw new Error("Failed to create new user!");
+
+    if (newUser) {
+      res.status(201).json({
+        _id: newUser._id,
+        email: newUser.email,
+        fullname: newUser.fullname,
+        phonenumber: newUser.phonenumber,
+        image: newUser.image,
+        token: generateToken(newUser._id),
+      });
+    } else {
+      res.status(400);
+      throw new Error("Failed to create new user!");
+    }
+  } catch (error) {
+    if (error.errors.email) {
+      err.push(error.errors.email.message);
+    }
+
+    if (error.errors.password) {
+      err.push(error.errors.password.message);
+    }
+
+    if (error.errors.phonenumber) {
+      err.push(error.errors.phonenumber.message);
+    }
+
+    res.status(400).send({ err });
+    throw new Error(err);
   }
 });
 
@@ -85,12 +105,12 @@ async function userUpdate(req, res) {
     });
 }
 
-const Login = asyncHandler(async (req, res) => {
+const Login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
-    res.json({
+    res.status(200).json({
       _id: user._id,
       email: user.email,
       fullname: user.fullname,
@@ -102,7 +122,7 @@ const Login = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("Incorrect email or password!");
   }
-});
+};
 
 const uploadAvatar = asyncHandler(async (req, res) => {
   try {
