@@ -6,7 +6,7 @@ const userController = require("../controllers/user.controller");
 router.post("/", userController.Register);
 router.post("/login", userController.Login);
 router.get("/", auth, userController.searchUser);
-router.put("/:id", auth, userController.userUpdate);
-router.put("/uploadAvatar/:id", userController.uploadAvatar);
+router.put("/updateUser", auth, userController.userUpdate);
+router.put("/uploadAvatar", auth, userController.uploadAvatar);
 
 module.exports = router;

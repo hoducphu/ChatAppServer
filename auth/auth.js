@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../model/user.model");
+const { ErrorHandle } = require("../utils/errorHandle");
 const secretKey = process.env.JWT_SECRET_KEY;
 
 const generateToken = (id) => {
@@ -25,14 +26,12 @@ const auth = async (req, res, next) => {
 
       next();
     } catch (error) {
-      res.status(401);
-      throw new Error("Not authorized, token failed");
+      throw new ErrorHandle(401, "Not authorized, token failed!");
     }
   }
 
   if (!token) {
-    res.status(401);
-    throw new Error("Not authorized, no token");
+    throw new ErrorHandle(401, "Not authorized, no token!");
   }
 };
 
