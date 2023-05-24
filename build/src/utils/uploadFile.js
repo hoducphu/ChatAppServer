@@ -4,7 +4,7 @@ var multer = require("multer");
 var util = require("util");
 var storage = multer.diskStorage({
   destination: function destination(req, file, cb) {
-    cb(null, "uploads/");
+    cb(null, "src/uploads/");
   },
   filename: function filename(req, file, cb) {
     cb(null, "".concat(Date.now(), "_").concat(file.originalname));
