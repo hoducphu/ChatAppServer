@@ -46,7 +46,7 @@ io.on("connection", (socket) => {
   });
 });
 
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("src/uploads"));
 connectDB.ConnectToMongoDB();
 server.listen(port, console.log(`port: ${port}`));
 module.exports = server;

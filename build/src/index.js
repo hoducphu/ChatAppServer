@@ -41,7 +41,6 @@ app.use(errorHandle);
 io.on("connection", function (socket) {
   socket.on("Join Room", function (room) {
     socket.join(room);
-    console.log("User joined room: ".concat(room));
   });
   socket.on("Received Message", function (msg) {
     var room = msg.room;
@@ -49,7 +48,7 @@ io.on("connection", function (socket) {
     socket.to(room._id).emit("New Message", msg);
   });
 });
-app.use("/uploads", express["static"]("uploads"));
+app.use("/uploads", express["static"]("src/uploads"));
 connectDB.ConnectToMongoDB();
 server.listen(port, console.log("port: ".concat(port)));
 module.exports = server;
