@@ -36,7 +36,6 @@ app.use(errorHandle);
 io.on("connection", (socket) => {
   socket.on("Join Room", (room) => {
     socket.join(room);
-    console.log(`User joined room: ${room}`);
   });
 
   socket.on("Received Message", (msg) => {
