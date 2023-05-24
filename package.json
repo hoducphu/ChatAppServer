@@ -4,13 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --inspect index.js",
-    "test": "mocha --timeout 10000"
+      "clean": "echo y | rmdir /s build && mkdir build",
+      "build-babel": "babel ./src -d ./build/src",
+      "build": "npm run clean && npm run build-babel",
+      "production": "npm run build && node ./build/src/index.js",
+      "dev": "nodemon --exec ./node_modules/.bin/babel-node ./src/index.js",
+      "test": "mocha --timeout 10000"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/cli": "^7.21.5",
+    "@babel/core": "^7.21.8",
+    "@babel/node": "^7.20.7",
+    "@babel/plugin-transform-runtime": "^7.21.4",
+    "@babel/preset-env": "^7.21.5",
+    "@babel/runtime": "^7.21.5",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "chai": "^4.3.6",
