@@ -33,8 +33,7 @@ const createRoom = async (req) => {
     throw new ErrorHandle(400, "Please input room name!");
   }
 
-  let users = JSON.parse(req.body.users);
-  users.unshift(req.user.id);
+  let users = [req.user.id, req.body.users];
 
   try {
     const newRoom = await roomModel.create({
